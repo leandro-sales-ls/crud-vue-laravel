@@ -1,6 +1,11 @@
 <template>
   <div id="ListData">
     <v-card>
+      <v-progress-linear
+        v-if="loading"
+        indeterminate
+        color="blue"
+      ></v-progress-linear>
       <v-card-title>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
@@ -15,6 +20,7 @@
           dense
         ></v-text-field>
       </v-card-title>
+
       <v-data-table
         :headers="headers"
         :items="desserts"
@@ -77,6 +83,7 @@ export default {
       search: "",
       dialog: false,
       deleteInforms: {},
+      loading: false,
       headerProps: {
         sortByText: "Filtro",
       },
@@ -102,11 +109,16 @@ export default {
 
   methods: {
     inicioDados() {
+      this.loading = true;
       UsuarioService.findAll()
         .then((res) => {
           this.desserts = res.data;
+          this.loading = false;
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          console.error(err);
+          this.loading = false;
+        });
     },
     confirmDeleteData(item) {
       this.dialog = true;

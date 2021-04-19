@@ -8,36 +8,49 @@
         <h2 v-else class="subheading grey--text">Editar de Usuario</h2>
       </v-col>
     </v-row>
+
     <v-row>
       <v-col class="text-right">
         <v-btn to="/"> <v-icon>arrow_back</v-icon> Voltar</v-btn>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col class="text-right">
-        <v-form ref="form" v-model="valid" lazy-validation>
-          <v-text-field
-            v-model="nome"
-            :counter="50"
-            :rules="nomeRules"
-            label="Nome"
-            required
-          ></v-text-field>
+    <br />
+    <v-card>
+      <v-progress-linear
+        v-if="loading"
+        indeterminate
+        color="blue"
+      ></v-progress-linear>
+      <v-card-title>
+        <v-row>
+          <v-col class="text-right">
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-text-field
+                v-model="nome"
+                :counter="50"
+                :rules="nomeRules"
+                label="Nome"
+                required
+              ></v-text-field>
 
-          <v-select
-            v-model="status"
-            :items="items"
-            :rules="[(v) => !!v || 'Status é obrigadorio']"
-            label="Status"
-            required
-          ></v-select>
+              <v-select
+                v-model="status"
+                :items="items"
+                :rules="[(v) => !!v || 'Status é obrigadorio']"
+                label="Status"
+                required
+              ></v-select>
 
-          <v-btn color="success" class="mr-4" @click="save()"> Salvar </v-btn>
+              <v-btn color="success" class="mr-4" @click="save()">
+                Salvar
+              </v-btn>
 
-          <v-btn color="error" class="mr-4" @click="reset"> Limpar</v-btn>
-        </v-form>
-      </v-col>
-    </v-row>
+              <v-btn color="error" class="mr-4" @click="reset"> Limpar</v-btn>
+            </v-form>
+          </v-col>
+        </v-row>
+      </v-card-title>
+    </v-card>
   </div>
 </template>
 
@@ -49,6 +62,7 @@ export default {
   props: ["codigo"],
   data: () => ({
     valid: true,
+    loading: false,
     nome: "",
     nomeRules: [
       (v) => !!v || "Nome é obrigatorio",
@@ -82,6 +96,7 @@ export default {
 
     save() {
       if (this.validate()) {
+        this.loading = true;
         if (this.codigo) {
           UsuarioService.update(
             {
@@ -103,8 +118,12 @@ export default {
                   position: "top-right",
                 });
               }
+              this.loading = false;
             })
-            .catch((err) => console.error(err));
+            .catch((err) => {
+              console.error(err);
+              this.loading = false;
+            });
         } else {
           UsuarioService.add({
             nome: this.nome,
@@ -123,8 +142,12 @@ export default {
                   position: "top-right",
                 });
               }
+              this.loading = false;
             })
-            .catch((err) => console.error(err));
+            .catch((err) => {
+              console.error(err);
+              this.loading = false;
+            });
         }
       }
     },
