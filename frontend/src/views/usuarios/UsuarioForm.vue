@@ -2,7 +2,10 @@
   <div class="home">
     <v-row>
       <v-col class="mb-2">
-        <h2 class="subheading grey--text">Cadastro de Usuario</h2>
+        <h2 v-if="!codigo" class="subheading grey--text">
+          Cadastro de Usuario
+        </h2>
+        <h2 v-else class="subheading grey--text">Editar de Usuario</h2>
       </v-col>
     </v-row>
     <v-row>
@@ -90,11 +93,16 @@ export default {
           )
             .then((res) => {
               if (!res.data.error) {
+                this.$toast.success("Usuario editado", {
+                  position: "top-right",
+                });
                 this.$router.push({
                   name: "Usuarios",
                 });
               } else {
-                console.log(res);
+                this.$toast.error(res.data.error, {
+                  position: "top-right",
+                });
               }
             })
             .catch((err) => console.error(err));
@@ -105,11 +113,16 @@ export default {
           })
             .then((res) => {
               if (!res.data.error) {
+                this.$toast.success("Usuario cadastrado", {
+                  position: "top-right",
+                });
                 this.$router.push({
                   name: "Usuarios",
                 });
               } else {
-                console.log(res);
+                this.$toast.error(res.data.error, {
+                  position: "top-right",
+                });
               }
             })
             .catch((err) => console.error(err));

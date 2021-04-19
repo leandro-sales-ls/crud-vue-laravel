@@ -118,8 +118,13 @@ export default {
         .then((res) => {
           if (!res.data.error) {
             this.inicioDados();
+            this.$toast.success("Usuario deletado", {
+              position: "top-right",
+            });
           } else {
-            console.log(res.error);
+            this.$toast.error(res.data.error, {
+              position: "top-right",
+            });
           }
           this.dialog = false;
         })
