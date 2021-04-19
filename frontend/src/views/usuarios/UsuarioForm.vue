@@ -18,7 +18,7 @@
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-text-field
             v-model="nome"
-            :counter="10"
+            :counter="50"
             :rules="nomeRules"
             label="Nome"
             required
@@ -53,7 +53,7 @@ export default {
     nomeRules: [
       (v) => !!v || "Nome é obrigatorio",
       (v) =>
-        (v && v.length <= 10) || "O Nome tem que cer acima de 10 caracteres",
+        (v && v.length <= 50) || "O Nome tem que ser menor que 50 caracteres",
     ],
 
     status: null,
@@ -65,7 +65,6 @@ export default {
     if (this.codigo) {
       UsuarioService.find(this.codigo)
         .then((res) => {
-          console.log(res);
           this.nome = res.data[0].nome;
           this.status = res.data[0].status;
         })
